@@ -1,4 +1,4 @@
-name: ci
+name: build-image
 
 on:
   push:
@@ -8,6 +8,9 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    env:
+      GRAALVM_VERSION: '21.3'
+      JAVA_VERSION: 'java17'
     steps:
       -
         name: Checkout
@@ -31,4 +34,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: user/app:latest
+          build-args: |
+            GRAALVM_VERSION=${{ env.GRAALVM_VERSION }}
+            JAVA_VERSION=${{ env.JAVA_VERSION }}
+          tags: addozhang/graalvm-maven:${{ env.JAVA_VERSION }}-${{ env.GRAALVM_VERSION }}
